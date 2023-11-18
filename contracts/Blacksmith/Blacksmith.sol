@@ -60,7 +60,7 @@ import "./interfaces/IBlacksmith.sol";
 /// 
 /// claimable tokens (_claimCoverRewards): 15255552810089260015362 (user's amount) * 31460969710819744181104383 (accRewardsPerToken in the state) / 10^12 - 51370974466242330516 (corrupted writeOff) = 479954484880029191014244839799854001 (or 479954484880029191.014244839799854001 COVER tokens ==> infinity)
 // ! must be without bug: 15255552810089260015362 (user's amount) * 31460969710819744181104383 (accRewardsPerToken in the state) / 10^12 - 479954484880029242385219306042184517 (honest writeOff) = 0 (+ some small amount of tokens that depends on the time that passed since the last claim or withdraw)
-
+///
 
 /**
  * @title COVER token shield mining contract

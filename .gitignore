@@ -3,6 +3,8 @@ node_modules
 .DS_Store
 .vscode
 
+/polygon
+
 # Hardhat files
 /cache
 /artifacts

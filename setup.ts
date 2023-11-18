@@ -3,4 +3,6 @@ import { ethers } from "hardhat";
 import { expect } from "chai";
 import "@nomicfoundation/hardhat-chai-matchers";
 
-export { loadFixture, ethers, expect, reset, time };
+const RPC_URL = "https://eth-mainnet.g.alchemy.com/v2/" + process.env.ALCHEMY_KEY;
+
+export { loadFixture, ethers, expect, reset, time, RPC_URL };
