@@ -15,21 +15,21 @@ const config: HardhatUserConfig = {
                         runs: 200
                     }
                 }
+            },
+            {
+                version: "0.8.0",
+                settings: {
+                    optimizer: {
+                        enabled: true,
+                        runs: 200
+                    }
+                }
             }
         ]
     },
     networks: {
         hardhat: {
-            // forking: {
-            //     enabled: true,
-            //     url: "https://eth-mainnet.g.alchemy.com/v2/" + process.env.ALCHEMY_KEY,
-            //     // blockNumber: 11540123
-            //     // blockNumber: 11542274
-            //     blockNumber: 11542278
-            //     // blockNumber: 11542297
-            //     // blockNumber: 11542309
-            //     // blockNumber: 11542320
-            // }
+            
         },
     }
 };
