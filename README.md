@@ -7,6 +7,12 @@ This repository is dedicated to the research and analysis of DeFi hacks in the E
 
 I will gradually increase the collection of hacks I have analyzed in this repository. Some analysis of hacks is done in Proof of Concept format, some completely repeat the process with all the corresponding numbers.
 
+## How to run
+
+1) Set your ALCHEMY_KEY in .env file (it's needed for forking mainnet to reproduct the state at the moment of some hack)
+2) `npm install`
+3) `npx hardhat run <HACK_LOCATION>`
+
 ## List
 
 | Hack           | Explained                                                              | Location              |
