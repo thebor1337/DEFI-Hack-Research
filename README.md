@@ -9,7 +9,7 @@ I will gradually increase the collection of hacks I have analyzed in this reposi
 
 ## How to run
 
-1) Set your ALCHEMY_KEY in .env file (it's needed for forking mainnet to reproduct the state at the moment of some hack)
+1) Set your ALCHEMY_KEY in .env file (it's needed for forking mainnet to reproduce the state at the moment of some hack)
 2) `npm install`
 3) `npx hardhat run <HACK_LOCATION>`
 
