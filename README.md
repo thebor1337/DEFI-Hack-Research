@@ -1,4 +1,3 @@
-
 # DeFi Hack Research Repository
 
 ## Overview
@@ -15,11 +14,11 @@ I will gradually increase the collection of hacks I have analyzed in this reposi
 
 ## List
 
-| Hack           | Explained                                                              | Location              |
-| -------------- | ---------------------------------------------------------------------- | --------------------- |
-| BeanStalk      | https://rekt.news/beanstalk-rekt/                                      | scripts/Beanstalk.ts  |
-| Harvest        | https://www.finder.com.au/harvest-finance-farm-hack-explained-simply   | scripts/Harvest.ts    |
-| Cover Protocol | https://mudit.blog/cover-protocol-hack-analysis-tokens-minted-exploit/ | scripts/Blacksmith.ts |
+| Hack            | Explained                                                              | Location              |
+| --------------- | ---------------------------------------------------------------------- | --------------------- |
+| BeanStalk       | https://rekt.news/beanstalk-rekt/                                      | scripts/Beanstalk.ts  |
+| Harvest Finance | https://www.finder.com.au/harvest-finance-farm-hack-explained-simply   | scripts/Harvest.ts    |
+| Cover Protocol  | https://mudit.blog/cover-protocol-hack-analysis-tokens-minted-exploit/ | scripts/Blacksmith.ts |
 
 ## Disclaimer
 
